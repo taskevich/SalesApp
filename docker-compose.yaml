@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  app:
+    container_name: "app"
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      pgbase:
+        condition: service_healthy
+    restart: unless-stopped
+
+  pgbase:
+    image: postgres:17
+    container_name: "pgbase"
+    volumes:
+      - .pgbase:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d sales -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
