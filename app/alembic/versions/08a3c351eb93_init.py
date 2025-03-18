@@ -23,8 +23,10 @@ def upgrade() -> None:
         "category",
         sa.Column(
             "id",
+            sa.Integer,
             primary_key=True,
             autoincrement=True,
+            nullable=False,
         ),
         sa.Column(
             "name",
@@ -37,8 +39,10 @@ def upgrade() -> None:
         "product",
         sa.Column(
             "id",
+            sa.BigInteger,
             primary_key=True,
             autoincrement=True,
+            nullable=False,
         ),
         sa.Column(
             "name",
@@ -61,8 +65,10 @@ def upgrade() -> None:
         "sale",
         sa.Column(
             "id",
+            sa.BigInteger,
             primary_key=True,
             autoincrement=True,
+            nullable=False,
         ),
         sa.Column(
             "product_id",

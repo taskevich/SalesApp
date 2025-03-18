@@ -1,3 +1,4 @@
+import logging
 import os
 from logging.config import fileConfig
 
@@ -29,7 +30,7 @@ target_metadata = None
 
 config.set_main_option(
     "sqlalchemy.url",
-    f"postgresql+asyncpg://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}"
+    f"postgresql+psycopg2://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}"
     f"@{os.getenv('POSTGRES_HOST')}/{os.getenv('POSTGRES_DB')}",
 )
 

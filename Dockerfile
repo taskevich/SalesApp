@@ -9,6 +9,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN alembic stamp head && alembic upgrade head
+EXPOSE ${FLASK_RUN_PORT}
 
-CMD ["bash", "-c", "export $(xargs < .env) && python3 app/app.py"]
+CMD ["bash", "-c", "export $(xargs < .env) && alembic upgrade head && flask --app app/app run --debug --port ${FLASK_RUN_PORT} --host ${FLASK_RUN_HOST}"]
