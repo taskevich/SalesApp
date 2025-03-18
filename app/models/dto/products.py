@@ -43,3 +43,18 @@ class PatchProductResponseDTO(BaseResponse):
 
 class DeleteProductResponseDTO(BaseResponse):
     pass
+
+
+class TotalSalesResponseDTO(BaseModel):
+    total: int
+
+
+class TopSaleDTO(BaseModel):
+    id: int = Field(exclude=True)
+    name: str
+    category: str
+    total: int
+
+
+class TopSalesResponseDTO(BaseModel):
+    topSaleProducts: list[TopSaleDTO] = Field(default_factory=list)

@@ -69,6 +69,10 @@ class Sale(Base):
         ),
         nullable=False,
     )
+    total_sold: Mapped[int] = mapped_column(
+        Integer,
+        server_default=text("0"),
+    )
     sold_at: Mapped[datetime] = mapped_column(
         DateTime,
         server_default=text("CURRENT_TIMESTAMP"),
