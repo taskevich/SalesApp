@@ -87,8 +87,13 @@ engine = create_engine(
 session_maker = sessionmaker(bind=engine)
 
 
+# Понимаю, что у flask есть app_context, но
+# думаю лучше, когда все интуитивно и понятно.
 @contextmanager
 def create_session():
+    """
+    Открытие сессии.
+    """
     with session_maker() as session:
         try:
             yield session
