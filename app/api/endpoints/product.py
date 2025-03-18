@@ -1,15 +1,19 @@
+import datetime
+
 from flask import Blueprint, request
 from pydantic import ValidationError
 from sqlalchemy import select, insert, update, delete
-
+from cachetools import cached, TTLCache
 from app.models.database.base import create_session, Product
 from app.models.dto.products import ProductsResponseDTO, ProductDTO, CategoryDTO, AddProductDTO, AddProductResponseDTO, \
     PatchProductDTO, PatchProductResponseDTO, DeleteProductResponseDTO
 
 product_api = Blueprint("product", __name__, url_prefix="/api/products")
+cache = TTLCache(maxsize=0, ttl=datetime.timedelta(minutes=5).total_seconds())
 
 
 @product_api.get("/")
+@cached(cache)
 def get_products():
     """
     Роут на получения списка всех продуктов.
@@ -93,6 +97,7 @@ def update_product(product_id: int):
             Product.id == product_id
         ))
         session.commit()
+        cache.clear()
     return PatchProductResponseDTO(
         error=False,
         message="OK",
@@ -106,10 +111,11 @@ def delete_product(product_id: int):
     Роут для удаления продукта
     """
     with create_session() as session:
-        if session.get(Product, product_id) is None:
+        if session.get(Product, product_id) is not None:
             session.execute(delete(Product).where(
                 Product.id == product_id
             ))
             session.commit()
+            cache.clear()
             return DeleteProductResponseDTO(error=False, message="OK", payload=None).model_dump()
     return DeleteProductResponseDTO(error=True, message="Product doesn't exists", payload=None).model_dump()

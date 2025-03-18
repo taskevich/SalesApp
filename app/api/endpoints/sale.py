@@ -1,3 +1,6 @@
+import datetime
+
+from cachetools import TTLCache, cached
 from flask import Blueprint, request
 from sqlalchemy import select, func, desc
 from app.models.database.base import create_session, Sale, Product, Category
@@ -5,9 +8,11 @@ from app.models.dto.products import TotalSalesResponseDTO, TopSalesResponseDTO, 
 from app.utils.database_utils import time_range_condition_builder
 
 sale_api = Blueprint("sale", __name__, url_prefix="/api/sales")
+cache = TTLCache(maxsize=0, ttl=datetime.timedelta(minutes=5).total_seconds())
 
 
 @sale_api.get("/total")
+@cached(cache)
 def get_total_sales():
     """
     Роут для получения общей суммы продаж.
@@ -23,6 +28,7 @@ def get_total_sales():
 
 
 @sale_api.get("/top-products")
+@cached(cache)
 def get_top_products():
     """
     Роут для получения самых продаваемых товаров.
