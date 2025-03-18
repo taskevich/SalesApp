@@ -10,12 +10,12 @@ class BaseResponse(BaseModel):
 
 
 class CategoryDTO(BaseModel):
-    id: int = Field(exclude=True)
+    id: int
     name: str
 
 
 class ProductDTO(BaseModel):
-    id: int = Field(exclude=True)
+    id: int
     name: str = Field()
     category: CategoryDTO
 
@@ -50,7 +50,7 @@ class TotalSalesResponseDTO(BaseModel):
 
 
 class TopSaleDTO(BaseModel):
-    id: int = Field(exclude=True)
+    id: int
     name: str
     category: str
     total: int
